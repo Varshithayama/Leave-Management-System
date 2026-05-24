@@ -17,13 +17,13 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Restore
-      run: dotnet restore leavemgmt/backend/LeaveManagement.API/LeaveManagement.API.csproj
+      run: dotnet restore backend/LeaveManagement.API/LeaveManagement.API.csproj
 
     - name: Build
-      run: dotnet build leavemgmt/backend/LeaveManagement.API/LeaveManagement.API.csproj --configuration Release --no-restore
+      run: dotnet build backend/LeaveManagement.API/LeaveManagement.API.csproj --configuration Release --no-restore
 
     - name: Publish
-      run: dotnet publish leavemgmt/backend/LeaveManagement.API/LeaveManagement.API.csproj --configuration Release --output ./publish
+      run: dotnet publish backend/LeaveManagement.API/LeaveManagement.API.csproj --configuration Release --output ./publish
 
     - name: Deploy to Azure
       uses: azure/webapps-deploy@v3
@@ -45,16 +45,16 @@ jobs:
 
     - name: Install
       run: npm ci
-      working-directory: leavemgmt/frontend
+      working-directory: frontend
 
     - name: Build
       run: npm run build
-      working-directory: leavemgmt/frontend
+      working-directory: frontend
 
     - name: Deploy to Netlify
       uses: netlify/actions/cli@master
       with:
-        args: deploy --prod --dir=leavemgmt/frontend/dist/leave-management
+        args: deploy --prod --dir=frontend/dist/leave-management
       env:
         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
