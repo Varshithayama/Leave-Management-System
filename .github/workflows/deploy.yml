@@ -3,110 +3,58 @@ name: Build & Deploy Leave Management System
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
-  # ─── BUILD & TEST BACKEND ───────────────────────────────
   backend:
-    name: Backend - Build & Test
+    name: Backend - Build & Deploy
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend/LeaveManagement.API
-
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
-    - name: Setup .NET 8
-      uses: actions/setup-dotnet@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
 
-    - name: Restore dependencies
-      run: dotnet restore
+    - name: Restore
+      run: dotnet restore leavemgmt/backend/LeaveManagement.API/LeaveManagement.API.csproj
 
     - name: Build
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build leavemgmt/backend/LeaveManagement.API/LeaveManagement.API.csproj --configuration Release --no-restore
 
     - name: Publish
-      run: dotnet publish --no-restore --configuration Release --output ./publish
+      run: dotnet publish leavemgmt/backend/LeaveManagement.API/LeaveManagement.API.csproj --configuration Release --output ./publish
 
-    - name: Upload publish artifact
-      uses: actions/upload-artifact@v3
+    - name: Deploy to Azure
+      uses: azure/webapps-deploy@v3
       with:
-        name: backend-publish
-        path: backend/LeaveManagement.API/publish
-
-  # ─── BUILD FRONTEND ─────────────────────────────────────
-  frontend:
-    name: Frontend - Build
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Setup Node.js 18
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-        cache: 'npm'
-        cache-dependency-path: frontend/package-lock.json
-
-    - name: Install dependencies
-      run: npm ci
-
-    - name: Build Angular
-      run: npm run build
-
-    - name: Upload frontend artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: frontend-dist
-        path: frontend/dist
-
-  # ─── DEPLOY BACKEND TO AZURE ────────────────────────────
-  deploy-backend:
-    name: Deploy Backend to Azure App Service
-    runs-on: ubuntu-latest
-    needs: backend
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-
-    steps:
-    - name: Download backend artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: backend-publish
-        path: ./publish
-
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: ${{ secrets.AZURE_WEBAPP_NAME }}        # Set in GitHub Secrets
-        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}  # Set in GitHub Secrets
+        app-name: 'leavemgmt-api'
+        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
         package: ./publish
 
-  # ─── DEPLOY FRONTEND TO NETLIFY ─────────────────────────
-  deploy-frontend:
-    name: Deploy Frontend to Netlify
+  frontend:
+    name: Frontend - Build & Deploy
     runs-on: ubuntu-latest
-    needs: frontend
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-
     steps:
-    - name: Download frontend artifact
-      uses: actions/download-artifact@v3
+    - uses: actions/checkout@v4
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
       with:
-        name: frontend-dist
-        path: ./dist
+        node-version: '18'
+
+    - name: Install
+      run: npm ci
+      working-directory: leavemgmt/frontend
+
+    - name: Build
+      run: npm run build
+      working-directory: leavemgmt/frontend
 
     - name: Deploy to Netlify
       uses: netlify/actions/cli@master
       with:
-        args: deploy --prod --dir=./dist/leave-management
+        args: deploy --prod --dir=leavemgmt/frontend/dist/leave-management
       env:
-        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}       # Set in GitHub Secrets
-        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}  # Set in GitHub Secrets
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
