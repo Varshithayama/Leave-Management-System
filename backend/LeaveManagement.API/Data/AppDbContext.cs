@@ -57,7 +57,7 @@ public class AppDbContext : DbContext
         );
 
         // Seed Leave Balances for current year
-        int year = DateTime.UtcNow.Year;
+        int year = 2026;
         int id = 1;
         foreach (var userId in new[] { 2, 3, 4 })
         {
@@ -70,10 +70,10 @@ public class AppDbContext : DbContext
 
         // Seed Holidays
         mb.Entity<Holiday>().HasData(
-            new Holiday { Id = 1, Name = "Republic Day", Date = new DateTime(year, 1, 26), Year = year },
-            new Holiday { Id = 2, Name = "Independence Day", Date = new DateTime(year, 8, 15), Year = year },
-            new Holiday { Id = 3, Name = "Gandhi Jayanti", Date = new DateTime(year, 10, 2), Year = year },
-            new Holiday { Id = 4, Name = "Christmas", Date = new DateTime(year, 12, 25), Year = year }
+            new Holiday { Id = 1, Name = "Republic Day",     Date = new DateTime(2026, 1, 26),  Year = 2026 },
+            new Holiday { Id = 2, Name = "Independence Day", Date = new DateTime(2026, 8, 15),  Year = 2026 },
+            new Holiday { Id = 3, Name = "Gandhi Jayanti",   Date = new DateTime(2026, 10, 2),  Year = 2026 },
+            new Holiday { Id = 4, Name = "Christmas",        Date = new DateTime(2026, 12, 25), Year = 2026 }
         );
     }
 }
