@@ -136,3 +136,4 @@ C:\Users\varsh\Downloads\LeaveManagement_FullProject_FIXED (3)\leavemgmt\backend
 C:\Users\varsh\Downloads\LeaveManagement_FullProject_FIXED (3)\leavemgmt\backend\LeaveManagement.API\obj\Debug\net8.0\LeaveManagement.API.pdb
 C:\Users\varsh\Downloads\LeaveManagement_FullProject_FIXED (3)\leavemgmt\backend\LeaveManagement.API\obj\Debug\net8.0\LeaveManagement.API.genruntimeconfig.cache
 C:\Users\varsh\Downloads\LeaveManagement_FullProject_FIXED (3)\leavemgmt\backend\LeaveManagement.API\obj\Debug\net8.0\ref\LeaveManagement.API.dll
+C:\Users\varsh\Downloads\LeaveManagement_FullProject_FIXED (3)\leavemgmt\backend\LeaveManagement.API\obj\Debug\net8.0\LeaveManagement.API.sourcelink.json

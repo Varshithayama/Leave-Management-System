@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://YOUR-APP-NAME.azurewebsites.net/api'
+  apiUrl: 'https://leavemgmt-api-b9efhrf7hhamgghd.southindia-01.azurewebsites.net/api'
 };
